@@ -1,13 +1,21 @@
 library(shiny)
 library(tidyverse)
 library(bslib) #themes for shinyapp
+library(here)
+
+
+corals_info <- read_csv(here("data", "corals_info.csv"))
+
+top10_species <- corals_info %>%
+  filter(species == c("acanthastrea brevis", "acanthastrea echinata", "acanthastrea hemprichii")) %>%  #change these later depending on what species we want
+  return(top10_species)
 
 
 
 #SETUP THE THEME - copied from lab last week we can change
 my_theme <- bs_theme(
   bg = "rgba(170, 208, 243)", #copy and pasted from the theme preview, background
-  fg = "blue", #
+  fg = "blue",
   primary = "black",
   base_font = font_google("Arial")
 )
@@ -15,20 +23,8 @@ my_theme <- bs_theme(
 #bs_theme_preview() lets you use a style sheet to make it pretty
 #another way to do this during lab week 3's video, making a css file
 
-#datasets?
-top10_species <- corals_info %>%
-  filter(species == c("acanthastrea brevis", "acanthastrea echinata", "acanthastrea hemprichii")) %>%  #change these later depending on what species we want
-  return(top10_species)
-
-
-
-
-
-
-
 ######USER INTERFACE########
-ui <- fluidPage(theme = my_theme,
-                navbarPage(
+ui <- fluidPage(navbarPage(    #when we put the theme in here before the navbarPage, we get an HTTP 400 error, Casey, any ideas??
                   "Coral Vulnerability to Stressors",
 
 
