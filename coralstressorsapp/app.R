@@ -1,15 +1,21 @@
+#ADD LIBRARIES HERE
 library(shiny)
 library(tidyverse)
 library(bslib) #themes for shinyapp
 library(here)
 
-
+# SETUP DATASETS HERE
 corals_info <- read_csv(here("data", "corals_info.csv"))
 
+#for first graph -- individual species' vulnerabilities to different stressors
 top10_species <- corals_info %>%
   filter(species == c("acanthastrea brevis", "acanthastrea echinata", "acanthastrea hemprichii")) %>%  #change these later depending on what species we want
   return(top10_species)
 
+#for second graph -- one stressor for each species
+stressors_top10_species <- corals_info %>%
+  filter(species == c("acanthastrea brevis", "acanthastrea echinata", "acanthastrea hemprichii")) %>%  #change these later depending on what species we want
+  return(stressors_top10_species)
 
 
 #SETUP THE THEME - copied from lab last week we can change
@@ -17,14 +23,18 @@ my_theme <- bs_theme(
   bg = "rgba(170, 208, 243)", #copy and pasted from the theme preview, background
   fg = "blue",
   primary = "black",
-  base_font = font_google("Arial")
+  base_font = font_google("Times")
 )
 
 #bs_theme_preview() lets you use a style sheet to make it pretty
 #another way to do this during lab week 3's video, making a css file
 
+
+
+
 ######USER INTERFACE########
-ui <- fluidPage(navbarPage(    #when we put the theme in here before the navbarPage, we get an HTTP 400 error, Casey, any ideas??
+ui <- fluidPage(#theme = my_theme  #when we put the theme in here before the navbarPage, we get an HTTP 400 error, Casey, any ideas?? Or, Melissa and Eleri if you can figure this out??
+                navbarPage(
                   "Coral Vulnerability to Stressors",
 
 
@@ -83,9 +93,9 @@ ui <- fluidPage(navbarPage(    #when we put the theme in here before the navbarP
 
 
 #GRAPHS - HEATHER
-                  tabPanel("Species Vulnerability Graphs",  #tabs up at the top we can select between
+tabPanel("Species Vulnerability Graphs",  #tabs up at the top we can select between
                            sidebarLayout( #creates a page that has a sidebar on one side that we can put widgets/explanations on one side, and then a larger panel on the right for graph/map
-                             sidebarPanel("Widgets",
+                             sidebarPanel("Coral Species Options",
                                          selectInput(
                                             inputId = "pick_species", label = "Choose Species:",  #what goes in the input id?
                                             choices = unique(top10_species$species) #gives the options for the checkboxes
@@ -96,16 +106,19 @@ ui <- fluidPage(navbarPage(    #when we put the theme in here before the navbarP
                            ) #end sidebar layout
                   ), #end tabPanel("Thing 2")
 
-                 # tabPanel("Stressor Graphs",
-                          # sidebarLayout(
-                          #   sidebarPanel("Widgets",
-                                    #      selectInput(
-                                        #    inputID = "pick_stressor", label = "Choose Stressor:",
-                                         #   choices = unique(top10_species$stressor)
-                                     #     )
-                          #    ) #end sidebar panel
-                        #   ) #end sidebar layout
-                      #  ), #end tabPanel
+
+tabPanel("Stressor Graphs",
+                          sidebarLayout(
+                            sidebarPanel("Stressor Options",
+                                          selectInput(
+                                            inputId = "pick_stressor", label = "Choose Stressor:",
+                                            choices = unique(stressors_top10_species$stressor)
+                                          )
+                              ), #end sidebar panel
+                            mainPanel("Output",
+                                      plotOutput("stressor_graph")) #call your graph or thing from below here, this line of code comes from what you called your plot in output$plot below in the server
+                          ) #end sidebar layout
+                        ), #end tabPanel
 
 
 
@@ -194,7 +207,8 @@ ui <- fluidPage(navbarPage(    #when we put the theme in here before the navbarP
 
 
                   #BACKGROUND INFO - HEATHER
-                  tabPanel("Thing 5")
+                  tabPanel("Background Information",
+                          mainPanel("Type up background information here"))  # could have a side panel to select what info you want -- data citation, general background information, etc.
 
 
 
@@ -269,23 +283,27 @@ server <- function(input, output) {
 
 
   # GRAPHS REACTIVE - HEATHER
+  #graph one
   graph_byspecies <- reactive((
     top10_species %>%
-     filter(species == input$pick_species) #change these later depending on what species we want
+     filter(species == input$pick_species)
   ))
 
   output$species_graph <- renderPlot(
     ggplot(data = graph_byspecies(), aes(x = stressor, y = vuln)) +
-      geom_bar(aes(color = species)))
+      geom_col() +
+    scale_fill_manual("#329ea8")) #how do i get this color actually on the graph?
+      #figure out text wrapping for x-axis labels
 
- # output$stressor_graph <- renderPlot(
-  #  ggplot(data = graph_byspecies(), aes(x = species, y = vuln) +
-   #   geom_bar(aes(color = stressor))
- # )
-#  )
+  #graph two
+  graph_bystressor <- reactive((
+      stressors_top10_species %>%
+          filter(stressor == input$pick_stressor)
+    ))
 
-  #now we need to tell user interface where to put the plot we created. go back up to UI and show where you want it to go
-
+  output$stressor_graph <- renderPlot(
+    ggplot(data = graph_bystressor(), aes(x = species, y = vuln)) +
+      geom_col())  #something is wrong with this, output isn't showing what I want, but it's generally working. I want all species from the dataset on the x-axis, and I want the y-axis to go from 0 to 1 all the time
 
 
 
