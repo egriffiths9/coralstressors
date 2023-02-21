@@ -208,7 +208,30 @@ tabPanel("Stressor Graphs",
 
                   #BACKGROUND INFO - HEATHER
                   tabPanel("Background Information",
-                          mainPanel("Type up background information here"))  # could have a side panel to select what info you want -- data citation, general background information, etc.
+                          mainPanel("This app provides information about ten coral species and their vulnerabilites to different stressors. Coral species were selected based on (their endangered status/being the most common/etc.) Stressors include:
+1) biomass removal,
+2) bycatch,
+3) entanglement in macroplastic,
+4) eutrophication and nutrient pollution,
+5) habitat loss and degradation,
+6) inorganic pollution,
+7) light pollution,
+8) marine heat waves,
+9) ocean acidification,
+10) oceanographic,
+11) organic pollution,
+12) microplastic pollution,
+13) poisons and toxins,
+14) salinity changes,
+15) sedimentation,
+16) sea level rise,
+17) sst rise,
+18) storm disturbance,
+19) UV radiation, and
+20) wildlife strikes. Each coral is given a vulnerability ranking between 0 and 1 for each of these stressors. This data is courtesy of Casey O'Hara.
+
+
+                                    "))  #What is 17? ALso, how do we make different sections and segments here?
 
 
 
