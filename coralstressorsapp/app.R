@@ -42,23 +42,19 @@ ui <- fluidPage(#theme = my_theme  #when we put the theme in here before the nav
 
 
 
-                  #MAP ONE - ELERI
-               #   tabPanel("Thing 1",  #tabs up at the top we can select between
-                #           sidebarLayout( #creates a page that has a sidebar on one side that we can put widgets/explanations on one side, and then a larger panel on the right for graph/map
-                 #            sidebarPanel("Widgets",
-                  #                        checkboxGroupInput(
-                   #                         inputId = "pick_species", label = "Choose Species:",
-                       #                     choices = unique(dataset$columnn_name)
-                        #                  )
-                         #    ), #end sidebarPanel
-                          #   mainPanel("Output",
-                           #            plotOutput("plot_1")) #call your graph or thing from below here, this line of code comes from what you called your plot in output$plot below in the server
-                          # ) #end sidebar layout
-             #     ), #end tabPanel("Thing 1")
-
-
-
-
+#MAP ONE - ELERI - Global Species Ranges Map
+tabPanel("Global Species Ranges",  #tabs up at the top we can select between
+         sidebarLayout( #creates a page that has a sidebar on one side that we can put widgets/explanations on one side, and then a larger panel on the right for graph/map
+           sidebarPanel("",
+                        checkboxGroupInput(
+                          inputId = "pick_species", label = "Choose Coral Species:",
+                          choices = unique(top10_species$species) # will narrow down the species list once we have a better idea of what we want to include
+                        )
+           ), #end sidebarPanel
+           mainPanel("Will add interactive map here once I know how to do this.",
+                     imageOutput("ocean_map")) #call your graph or thing from below here, this line of code comes from what you called your plot in output$plot below in the server
+         ) #end sidebar layout
+), #end tabPanel("Global Species Ranges")
 
 
 
